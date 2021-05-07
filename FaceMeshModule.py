@@ -4,17 +4,18 @@ import sys
 import os, os.path
 import face_recognition
 class FaceMeshDetector():
-    def __init__(self, staticMode = False, maxFaces = 2, minDefectionConfidence = 1.0, minTrackConfidnce = 0.333):
+    def __init__(self, staticMode = False, maxFaces = 2, minDefectionConfidence = 0.01, minTrackConfidnce = 0.015):
         self.staticMode = staticMode
         self.maxFaces = maxFaces
         self.minDefectionConfidence = minDefectionConfidence
         self.minTrackConfidnce = minTrackConfidnce
         self.mpDraw = mp.solutions.drawing_utils
         self.mpFaceMesh = mp.solutions.face_mesh
-        self.faceMesh = self.mpFaceMesh.FaceMesh(staticMode, self.maxFaces, 
-                                                self.minDefectionConfidence, 
-                                                self.minTrackConfidnce)
-        self.drawSpec = self.mpDraw.DrawingSpec(thickness=0.5, circle_radius=1)
+        self.faceMesh = self.mpFaceMesh.FaceMesh(static_image_mode = staticMode, max_num_faces = self.maxFaces, 
+                                                min_detection_confidence = self.minDefectionConfidence, 
+                                                min_tracking_confidence = self.minTrackConfidnce)
+
+        self.drawSpec = self.mpDraw.DrawingSpec(thickness=0.5, circle_radius=0.5)
     def findFaceMesh(self,img, name, draw =True):
         imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         self.results = self.faceMesh.process(imgRGB)
@@ -50,7 +51,7 @@ class FaceMeshDetector():
         return img, faces
 
 def main():
-    detector = FaceMeshDetector(minTrackConfidnce = 0.333)
+    detector = FaceMeshDetector()
     imagePath = "Photos/photography_project/"
     names = os.listdir(imagePath)
     print(names)
