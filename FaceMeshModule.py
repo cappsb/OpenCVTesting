@@ -16,7 +16,7 @@ class FaceMeshDetector():
                                                 min_tracking_confidence = self.minTrackConfidnce)
 
         self.drawSpec = self.mpDraw.DrawingSpec(thickness=0.5, circle_radius=0.5)
-    def findFaceMesh(self,img, name, draw =True):
+    def findFaceMesh(self,img, name, draw =True, useFaceRec = True):
         imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         self.results = self.faceMesh.process(imgRGB)
         faces = []
@@ -30,24 +30,26 @@ class FaceMeshDetector():
                     ih, iw, ic = img.shape
                     x,y = int(lm.x*iw), int(lm.y*ih)
                     faceCoords.append([x,y])
+
                 faces.append(faceCoords)  
-        imagePath = "Photos/photography_project/"
-        names = os.listdir(imagePath)
-        image = face_recognition.load_image_file(os.path.join(imagePath, name))
-        locations = face_recognition.face_locations(image)
-        encodings = face_recognition.face_encodings(image, locations)
-        image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+        if useFaceRec:
+            imagePath = "Photos/photography_project/"
+            names = os.listdir(imagePath)
+            image = face_recognition.load_image_file(os.path.join(imagePath, name))
+            locations = face_recognition.face_locations(image)
+            encodings = face_recognition.face_encodings(image, locations)
+            image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
-        for face_encoding, face_location in zip(encodings, locations):
-            top_left = (face_location[3], face_location[0])
-            bottom_right =  (face_location[1], face_location[2])
-            color = [0,255,0]
+            for face_encoding, face_location in zip(encodings, locations):
+                top_left = (face_location[3], face_location[0])
+                bottom_right =  (face_location[1], face_location[2])
+                color = [0,255,0]
 
-            cv2.rectangle(image, top_left, bottom_right, color, 3)      
-        cv2.imshow("First Image", image)
-        cv2.imshow("Second image Image", img)
-
-        cv2.waitKey(0)
+                cv2.rectangle(image, top_left, bottom_right, color, 3)      
+            cv2.imshow("First Image", image)
+        if draw:
+            cv2.imshow("Mesh", img)
+            cv2.waitKey(0)
         return img, faces
 
 def main():
