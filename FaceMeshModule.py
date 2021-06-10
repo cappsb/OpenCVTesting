@@ -2,7 +2,7 @@ import cv2
 import mediapipe as mp
 import sys
 import os, os.path
-import face_recognition
+# import face_recognition
 class FaceMeshDetector():
     def __init__(self, staticMode = False, maxFaces = 2, minDefectionConfidence = 0.01, minTrackConfidnce = 0.015):
         self.staticMode = staticMode
@@ -27,26 +27,27 @@ class FaceMeshDetector():
                     self.mpDraw.draw_landmarks(img, faceLms, self.mpFaceMesh.FACE_CONNECTIONS)
                 faceCoords = []
                 for id, lm in enumerate(faceLms.landmark):
+                    print(lm)
                     ih, iw, ic = img.shape
                     x,y = int(lm.x*iw), int(lm.y*ih)
                     faceCoords.append([x,y])
 
                 faces.append(faceCoords)  
-        if useFaceRec:
-            imagePath = "Photos/photography_project/"
-            names = os.listdir(imagePath)
-            image = face_recognition.load_image_file(os.path.join(imagePath, name))
-            locations = face_recognition.face_locations(image)
-            encodings = face_recognition.face_encodings(image, locations)
-            image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+        # if useFaceRec:
+        #     imagePath = "Photos/photography_project/"
+        #     names = os.listdir(imagePath)
+        #     image = face_recognition.load_image_file(os.path.join(imagePath, name))
+        #     locations = face_recognition.face_locations(image)
+        #     encodings = face_recognition.face_encodings(image, locations)
+        #     image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
-            for face_encoding, face_location in zip(encodings, locations):
-                top_left = (face_location[3], face_location[0])
-                bottom_right =  (face_location[1], face_location[2])
-                color = [0,255,0]
+            # for face_encoding, face_location in zip(encodings, locations):
+            #     top_left = (face_location[3], face_location[0])
+            #     bottom_right =  (face_location[1], face_location[2])
+            #     color = [0,255,0]
 
-                cv2.rectangle(image, top_left, bottom_right, color, 3)      
-            cv2.imshow("First Image", image)
+            #     cv2.rectangle(image, top_left, bottom_right, color, 3)      
+            # cv2.imshow("First Image", image)
         if draw:
             cv2.imshow("Mesh", img)
             cv2.waitKey(0)
