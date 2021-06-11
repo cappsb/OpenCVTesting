@@ -60,8 +60,7 @@ def main():
                 gray = cv2.cvtColor(img[coord[0][1]:coord[1][1] , coord[0][0]:coord[1][0]], cv2.COLOR_BGR2GRAY)
                 summation += variance_of_laplacian(gray)
             fm = summation / (len(coords)+0.0)
-            
-        
+
         else:
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             fm = variance_of_laplacian(gray)
